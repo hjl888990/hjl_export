@@ -1,0 +1,36 @@
+{
+  "name": "hjl/hjl_export",
+  "type": "library",
+  "description": "hjl export services of composer project!",
+  "keywords": [
+    "hjl",
+    "export",
+    "excel",
+    "csv"
+  ],
+  "homepage": "https://github.com/hjl888990/hjl_export",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "hjl",
+      "email": "1195601363@qq.com",
+      "homepage": "https://github.com/hjl888990",
+      "role": "Owner"
+    }
+  ],
+  "require": {
+    "php": ">=5.5.0",
+    "phpoffice/phpspreadsheet": "*"
+  },
+  "repositories": {
+    "packagist": {
+      "type": "composer",
+      "url": "https://packagist.phpcomposer.com"
+    }
+  },
+  "autoload": {
+    "psr-4": {
+      "Export\\": "Export/"
+    }
+  }
+}

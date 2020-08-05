@@ -30,25 +30,29 @@ class ExportClient
 
     /**
      * 获取存储模式
-     * @param $store_type
-     * @param $export_file_path
+     * @param $store_type 导出文件类型
+     * @param $export_tmp_path 导出文件临时目录
      * @return MultiCsv|MultiPhpofficeExcel|MultiXlsWriteExcel
      * @throws \Exception
      */
-    public function getExportStorage($store_type, $export_file_path) {
+    public function getExportClient($store_type, $export_tmp_path) {
+        if (empty($store_type) || empty($export_tmp_path)) {
+            throw new \Exception('getExportClient params is empty');
+        }
         switch ($store_type) {
             case self::EXPORT_STORAGE_TYPE_OF_CSV:
-                $storage_class = new MultiCsv($export_file_path);
+                $storage_client = new MultiCsv($export_tmp_path);
                 break;
             case self::EXPORT_STORAGE_TYPE_OF_XLSWRITE_EXCEL:
-                $storage_class = new MultiXlsWriteExcel($export_file_path);
+                $storage_client = new MultiXlsWriteExcel($export_tmp_path);
                 break;
             case self::EXPORT_STORAGE_TYPE_OF_PHPOFFICE_EXCEL:
-                $storage_class = new MultiPhpofficeExcel($export_file_path);
+                $storage_client = new MultiPhpofficeExcel($export_tmp_path);
                 break;
             default:
-                throw new \Exception('store_type is null');
+                throw new \Exception('getExportClient params[store_type] error');
         }
-        return $storage_class;
+        return $storage_client;
     }
+
 }

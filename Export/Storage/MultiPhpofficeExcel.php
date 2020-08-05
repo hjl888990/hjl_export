@@ -14,12 +14,8 @@ use \PhpOffice\PhpSpreadsheet\Spreadsheet;
 use \PhpOffice\PhpSpreadsheet\IOFactory;
 
 
-class MultiPhpofficeExcel implements ExportStoragetInterface
+class MultiPhpofficeExcel extends ExportStorageAbstract
 {
-
-    protected $handles = [];
-
-    protected $export_basic_path = '';
 
     protected $handles_filename_mp = [];
 
@@ -30,11 +26,8 @@ class MultiPhpofficeExcel implements ExportStoragetInterface
     protected $handles_sheet_row_mp = [];
 
 
-    public function __construct($export_basic_path) {
-        if (!is_dir($export_basic_path)) {
-            mkdir($export_basic_path);
-        }
-        $this->export_basic_path = $export_basic_path;
+    public function __construct($export_tmp_path) {
+        parent::__construct($export_tmp_path);
     }
 
     public function addHandle($key, $export_relative_path = '') {
@@ -45,13 +38,6 @@ class MultiPhpofficeExcel implements ExportStoragetInterface
         $this->handles[$key]             = $spreadsheet;
         $this->handles_sheet_mp[$key]    = $handle_sheet;
         $this->handles_filename_mp[$key] = $export_file_path . '/' . $tmp_name;
-    }
-
-    public function getHandle($key) {
-        if (!array_key_exists($key, $this->handles)) {
-            return null;
-        }
-        return $this->handles[$key];
     }
 
     public function writeTitle($key, $data) {
@@ -86,10 +72,8 @@ class MultiPhpofficeExcel implements ExportStoragetInterface
     }
 
     public function deleteAll() {
-    }
-
-    public function count() {
-        return count($this->handles);
+        $export_basic_path = $this->getExportBasicPath();
+        $this->removeDir($export_basic_path);
     }
 
     public function toArray() {
@@ -98,10 +82,6 @@ class MultiPhpofficeExcel implements ExportStoragetInterface
 
     public function getFileExtension() {
         return 'xlsx';
-    }
-
-    public function getExportBasicPath() {
-        return $this->export_basic_path;
     }
 
     public static function translateDataType($date_type_index) {

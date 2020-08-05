@@ -9,6 +9,8 @@
 namespace Export\Storage;
 
 
+use Export\ExportClient;
+
 class MultiXlsWriteExcel implements ExportStoragetInterface
 {
 

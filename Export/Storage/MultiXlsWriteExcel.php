@@ -62,6 +62,9 @@ class MultiXlsWriteExcel implements ExportStoragetInterface
         $this->handles_sheet_row_mp[$key]++;
         $index = 0;
         foreach ($data as $i => $value) {
+            if (strlen($value) > 32000) {//最大长度限制
+                $value = substr($value, 0, 32000);
+            }
             if ($value === "") {
                 $this->handles[$key]->insertText($this->handles_sheet_row_mp[$key], $index, $value);
                 $index++;

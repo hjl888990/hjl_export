@@ -11,12 +11,8 @@ namespace Export\Storage;
 
 use Export\ExportClient;
 
-class MultiXlsWriteExcel implements ExportStoragetInterface
+class MultiXlsWriteExcel extends ExportStorageAbstract implements ExportStoragetInterface
 {
-
-    protected $handles = [];
-
-    protected $export_basic_path = '';
 
     protected $handles_filename_mp = [];
 
@@ -24,11 +20,8 @@ class MultiXlsWriteExcel implements ExportStoragetInterface
 
     protected $handles_sheet_row_mp = [];
 
-    public function __construct($export_basic_path) {
-        if (!is_dir($export_basic_path)) {
-            mkdir($export_basic_path);
-        }
-        $this->export_basic_path = $export_basic_path;
+    public function __construct($export_tmp_path) {
+        parent::__construct($export_tmp_path);
     }
 
     public function addHandle($key, $export_relative_path = '') {
@@ -40,13 +33,6 @@ class MultiXlsWriteExcel implements ExportStoragetInterface
         //$handle->fileName($tmp_name, 'sheet1');//普通模式
         $this->handles[$key]             = $handle;
         $this->handles_filename_mp[$key] = $export_file_path . '/' . $tmp_name;
-    }
-
-    public function getHandle($key) {
-        if (!array_key_exists($key, $this->handles)) {
-            return null;
-        }
-        return $this->handles[$key];
     }
 
     public function writeTitle($key, $data) {
@@ -102,7 +88,6 @@ class MultiXlsWriteExcel implements ExportStoragetInterface
                     $index++;
             }
         }
-        //$this->handles[$key]->data([$data]);
     }
 
     public function output() {
@@ -112,10 +97,8 @@ class MultiXlsWriteExcel implements ExportStoragetInterface
     }
 
     public function deleteAll() {
-    }
-
-    public function count() {
-        return count($this->handles);
+        $export_basic_path = $this->getExportBasicPath();
+        $this->removeDir($export_basic_path);
     }
 
     public function toArray() {
@@ -124,9 +107,5 @@ class MultiXlsWriteExcel implements ExportStoragetInterface
 
     public function getFileExtension() {
         return 'xlsx';
-    }
-
-    public function getExportBasicPath() {
-        return $this->export_basic_path;
     }
 }

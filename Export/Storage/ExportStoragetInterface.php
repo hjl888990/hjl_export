@@ -26,13 +26,6 @@ interface ExportStoragetInterface
     public function addHandle($key, $export_relative_path);
 
     /**
-     * 获取对应导出类
-     * @param $key
-     * @return mixed
-     */
-    public function getHandle($key);
-
-    /**
      * 写入标题
      * @param $key
      * @param $content
@@ -58,14 +51,11 @@ interface ExportStoragetInterface
 
     public function deleteAll();
 
-    public function count();
 
     /**
      * 获取文件名集合
      * @return mixed
      */
     public function toArray();
-
-    public function getExportBasicPath();
 
 }

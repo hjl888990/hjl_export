@@ -28,6 +28,10 @@ class ExportClient
 
     const DATA_TYPE_OF_LINK = 3;
 
+    const DATA_TYPE_OF_STRING_BG_COLOR = 4;
+
+    const DATA_TYPE_OF_WEB_URL = 5;
+
     /**
      * 获取存储模式
      * @param $store_type 导出文件类型

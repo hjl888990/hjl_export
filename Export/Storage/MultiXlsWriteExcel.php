@@ -81,6 +81,36 @@ class MultiXlsWriteExcel extends ExportStorageAbstract implements ExportStoraget
                     $this->handles[$key]->insertUrl($this->handles_sheet_row_mp[$key], $index, $value, $urlStyle);
                     $index++;
                     break;
+                case ExportClient::DATA_TYPE_OF_WEB_URL:
+                    $fileHandle = $this->handles[$key]->getHandle();
+                    $format     = new \Vtiful\Kernel\Format($fileHandle);
+                    $urlStyle   = $format->fontColor(\Vtiful\Kernel\Format::COLOR_BLUE)
+                        ->underline(\Vtiful\Kernel\Format::UNDERLINE_SINGLE)
+                        ->toResource();
+                    $this->handles[$key]->insertUrl($this->handles_sheet_row_mp[$key], $index, $value, $urlStyle);
+                    $index++;
+                    break;
+                case ExportClient::DATA_TYPE_OF_STRING_BG_COLOR:
+                    $type  = 'string';
+                    $color = '';
+                    if (!empty($value)) {
+                        $value_arr = explode('_', $value);
+                        $color     = empty($value_arr[1]) ? '' : $value_arr[1];
+                        $value     = empty($value_arr[0]) ? '' : $value_arr[0];
+                    }
+                    settype($value, $type);
+                    if (!empty($color)) {
+                        settype($color, 'integer');
+                        $fileHandle = $this->handles[$key]->getHandle();
+                        $format     = new \Vtiful\Kernel\Format($fileHandle);
+                        $urlStyle   = $format->background($color)
+                            ->toResource();
+                        $this->handles[$key]->insertText($this->handles_sheet_row_mp[$key], $index, $value, '', $urlStyle);
+                    } else {
+                        $this->handles[$key]->insertText($this->handles_sheet_row_mp[$key], $index, $value);
+                    }
+                    $index++;
+                    break;
                 default:
                     $type = 'string';
                     settype($value, $type);

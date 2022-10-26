@@ -20,7 +20,7 @@ class MultiXlsWriteExcel extends ExportStorageAbstract implements ExportStoraget
 
     protected $handles_sheet_row_mp = [];
 
-    protected $use_beautify_style = false;
+    protected $use_beautify_style = true;
 
 
     public function __construct($export_tmp_path) {
@@ -75,9 +75,6 @@ class MultiXlsWriteExcel extends ExportStorageAbstract implements ExportStoraget
             if (strlen($value) > 32000) {//最大长度限制
                 $value = substr($value, 0, 32000);
             }
-            if ($value === "") {
-                $this->handles_sheet_column_datatype_mp[$key][$i] = ExportClient::DATA_TYPE_OF_STRING;
-            }
             $date_type = isset($this->handles_sheet_column_datatype_mp[$key][$i]) ? $this->handles_sheet_column_datatype_mp[$key][$i] : 0;
             switch ($date_type) {
                 case ExportClient::DATA_TYPE_OF_STRING:
@@ -98,24 +95,20 @@ class MultiXlsWriteExcel extends ExportStorageAbstract implements ExportStoraget
                         $value      = str_replace('/', '\\', $value);
                         $fileHandle = $this->handles[$key]->getHandle();
                         $format     = new \Vtiful\Kernel\Format($fileHandle);
-                        $urlStyle   = $format->align(\Vtiful\Kernel\Format::FORMAT_ALIGN_CENTER)->align(\Vtiful\Kernel\Format::FORMAT_ALIGN_VERTICAL_CENTER)
-                            ->wrap()
-                            ->fontColor(\Vtiful\Kernel\Format::COLOR_BLUE)
+                        $style      = $format->fontColor(\Vtiful\Kernel\Format::COLOR_BLUE)
                             ->underline(\Vtiful\Kernel\Format::UNDERLINE_SINGLE)
                             ->toResource();
-                        $this->handles[$key]->insertUrl($this->handles_sheet_row_mp[$key], $index, $value, $urlStyle);
+                        $this->handles[$key]->insertUrl($this->handles_sheet_row_mp[$key], $index, $value, $style);
                     }
                     break;
                 case ExportClient::DATA_TYPE_OF_WEB_URL:
                     if (substr($value, 0, strlen('http')) === 'http') {
                         $fileHandle = $this->handles[$key]->getHandle();
                         $format     = new \Vtiful\Kernel\Format($fileHandle);
-                        $urlStyle   = $format->align(\Vtiful\Kernel\Format::FORMAT_ALIGN_CENTER)->align(\Vtiful\Kernel\Format::FORMAT_ALIGN_VERTICAL_CENTER)
-                            ->wrap()
-                            ->fontColor(\Vtiful\Kernel\Format::COLOR_BLUE)
+                        $style      = $format->fontColor(\Vtiful\Kernel\Format::COLOR_BLUE)
                             ->underline(\Vtiful\Kernel\Format::UNDERLINE_SINGLE)
                             ->toResource();
-                        $this->handles[$key]->insertUrl($this->handles_sheet_row_mp[$key], $index, $value, $urlStyle);
+                        $this->handles[$key]->insertUrl($this->handles_sheet_row_mp[$key], $index, $value, $style);
                     } else {
                         $type = 'string';
                         settype($value, $type);
@@ -135,11 +128,9 @@ class MultiXlsWriteExcel extends ExportStorageAbstract implements ExportStoraget
                         settype($color, 'integer');
                         $fileHandle = $this->handles[$key]->getHandle();
                         $format     = new \Vtiful\Kernel\Format($fileHandle);
-                        $urlStyle   = $format->align(\Vtiful\Kernel\Format::FORMAT_ALIGN_CENTER)->align(\Vtiful\Kernel\Format::FORMAT_ALIGN_VERTICAL_CENTER)
-                            ->wrap()
-                            ->background($color)
+                        $style      = $format->background($color)
                             ->toResource();
-                        $this->handles[$key]->insertText($this->handles_sheet_row_mp[$key], $index, $value, '', $urlStyle);
+                        $this->handles[$key]->insertText($this->handles_sheet_row_mp[$key], $index, $value, '', $style);
                     } else {
                         $this->handles[$key]->insertText($this->handles_sheet_row_mp[$key], $index, $value);
                     }
@@ -153,10 +144,12 @@ class MultiXlsWriteExcel extends ExportStorageAbstract implements ExportStoraget
 
             //美化样式
             if ($this->use_beautify_style) {
-                $rowHigh          = 40;
-                $fontSize         = 10;
-                $fileHandle       = $this->handles[$key]->getHandle();
-                $format           = new \Vtiful\Kernel\Format($fileHandle);
+                $rowHigh  = 40;
+                $fontSize = 10;
+                if (empty($format)) {
+                    $fileHandle = $this->handles[$key]->getHandle();
+                    $format     = new \Vtiful\Kernel\Format($fileHandle);
+                }
                 $style            = $format->align(\Vtiful\Kernel\Format::FORMAT_ALIGN_CENTER)->align(\Vtiful\Kernel\Format::FORMAT_ALIGN_VERTICAL_CENTER)
                     ->wrap()
                     ->fontSize($fontSize)
@@ -166,6 +159,7 @@ class MultiXlsWriteExcel extends ExportStorageAbstract implements ExportStoraget
                 $excelLetter      = $this->numToExcelLetter($excelColumnIndex);
                 $this->handles[$key]->setRow("{$excelLetter}{$excelRowIndex}", $rowHigh, $style);
             }
+            unset($format);
         }
     }
 

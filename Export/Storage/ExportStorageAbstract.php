@@ -72,4 +72,35 @@ class ExportStorageAbstract
         return rmdir($dirName);
     }
 
+    //根据数字转换成excel的字母
+    protected function numToExcelLetter($num) {
+        //由于大写字母只有26个，所以基数为26
+        $base   = 26;
+        $result = '';
+        while ($num > 0) {
+            $mod = (int)($num % $base);
+            $num = (int)($num / $base);
+            if ($mod == 0) {
+                $num  -= 1;
+                $temp = $this->numToLetter($base) . $result;
+            } elseif ($num == 0) {
+                $temp = $this->numToLetter($mod) . $result;
+            } else {
+                $temp = $this->numToLetter($mod) . $result;
+            }
+            $result = $temp;
+        }
+        return $result;
+    }
+
+    protected function numToLetter($num) {
+        if ($num == 0) {
+            return '';
+        }
+        $num = (int)$num - 1;
+        //获取A的ascii码
+        $ordA = ord('A');
+        return chr($ordA + $num);
+    }
+
 }

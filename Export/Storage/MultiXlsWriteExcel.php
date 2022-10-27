@@ -54,13 +54,16 @@ class MultiXlsWriteExcel extends ExportStorageAbstract implements ExportStoraget
             $style            = $format->align(\Vtiful\Kernel\Format::FORMAT_ALIGN_CENTER)->align(\Vtiful\Kernel\Format::FORMAT_ALIGN_VERTICAL_CENTER)
                 ->wrap()
                 ->bold()
+                ->border(\Vtiful\Kernel\Format::BORDER_THIN)
+                ->background(4620980)
+                ->fontColor(16777215)
                 ->fontSize($fontSize)
                 ->toResource();
             $excelColumnIndex = 1;
             $excelRowIndex    = 1;
             foreach ($data as $i => $value) {
                 $excelLetter  = $this->numToExcelLetter($excelColumnIndex);
-                $column_width = strlen($value['title']) * 1 + 10;
+                $column_width = strlen($value['title']) * 1 + 13;
                 $this->handles[$key]->setColumn("{$excelLetter}:{$excelLetter}", $column_width);
                 $this->handles[$key]->setRow("{$excelLetter}{$excelRowIndex}", $rowHigh, $style);
                 $excelColumnIndex++;
@@ -129,6 +132,7 @@ class MultiXlsWriteExcel extends ExportStorageAbstract implements ExportStoraget
                         $fileHandle = $this->handles[$key]->getHandle();
                         $format     = new \Vtiful\Kernel\Format($fileHandle);
                         $style      = $format->background($color)
+                            ->bold()
                             ->toResource();
                         $this->handles[$key]->insertText($this->handles_sheet_row_mp[$key], $index, $value, '', $style);
                     } else {
@@ -144,8 +148,8 @@ class MultiXlsWriteExcel extends ExportStorageAbstract implements ExportStoraget
 
             //美化样式
             if ($this->use_beautify_style) {
-                $rowHigh  = 40;
-                $fontSize = 10;
+                $rowHigh  = 47;
+                $fontSize = 12;
                 if (empty($format)) {
                     $fileHandle = $this->handles[$key]->getHandle();
                     $format     = new \Vtiful\Kernel\Format($fileHandle);

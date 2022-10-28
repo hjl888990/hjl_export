@@ -103,4 +103,11 @@ class ExportStorageAbstract
         return chr($ordA + $num);
     }
 
+    protected function hexCovertColor($hex) {
+        if (empty($hex)) {
+            return '';
+        }
+        return hexdec(trim($hex, '#'));
+    }
+
 }

@@ -55,8 +55,8 @@ class MultiXlsWriteExcel extends ExportStorageAbstract implements ExportStoraget
                 ->wrap()
                 ->bold()
                 ->border(\Vtiful\Kernel\Format::BORDER_THIN)
-                ->background(4620980)
-                ->fontColor(16777215)
+                ->background($this->hexCovertColor('#369755'))
+                ->fontColor($this->hexCovertColor('#FFFFFF'))
                 ->fontSize($fontSize)
                 ->toResource();
             $excelColumnIndex = 1;
